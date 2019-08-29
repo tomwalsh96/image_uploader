@@ -1,13 +1,15 @@
 <template>
-  <HelloWorld />
+  <v-container>
+    <ImageUploader />
+  </v-container>
 </template>
 
 <script>
-import HelloWorld from '../components/HelloWorld';
+import ImageUploader from '../components/ImageUploader'
 
 export default {
   components: {
-    HelloWorld,
-  },
-};
+    ImageUploader
+  }
+}
 </script>
