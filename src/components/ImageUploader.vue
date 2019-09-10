@@ -62,13 +62,22 @@ export default {
   }),
   methods: {
     onFileChange () {
-      let reader = new FileReader()
-      reader.onload = () => {
-        reader.imagUrl = reader.result
+      if (this.file !== null) {
+        let reader = new FileReader()
+        reader.onload = () => {
+          reader.imagUrl = reader.result
+        }
+        reader.readAsDataURL(this.file)
       }
-      reader.readAsDataURL(this.file)
+    },
+    clearFile () {
+      this.file = null
+      this.imageURL = null
+      this.uploadPercentage = 0
     },
     onUpload () {
+      let _self = this
+
       // create a firebase storage ref
       var storageRef = firebase.storage().ref('public_wall/' + this.file.name)
 
@@ -77,9 +86,9 @@ export default {
 
       // update progress bar
       task.on('state_changed',
-        snapshot => {
+        function (snapshot) {
           var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          this.uploadPercentage = percentage
+          _self.uploadPercentage = percentage
         },
 
         function error (err) {
@@ -87,7 +96,8 @@ export default {
         },
 
         function completed () {
-
+          _self.$emit('upload-complete')
+          _self.clearFile()
         }
 
       )
